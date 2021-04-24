@@ -62,14 +62,23 @@ public class TypeTrans {
         }
         return value;
     }
-	
-	public static boolean hexCompare(byte[] b1, byte[] b2) {
-		//TODO
-		return true;
-	}
-	
-	public static boolean hexCompare(String s1, String s2) {
-		return hexCompare(hex2Byte(s1), hex2Byte(s2));
-	}
+    
+    public static byte[] long2Byte(long num) {
+        byte[] byteNum = new byte[8];
+        for (int ix = 0; ix < 8; ++ix) {
+            int offset = 64 - (ix + 1) * 8;
+            byteNum[ix] = (byte) ((num >> offset) & 0xff);
+        }
+        return byteNum;
+    }
+
+    public static long byte2Long(byte[] byteNum) {
+        long num = 0;
+        for (int ix = 0; ix < 8; ++ix) {
+            num <<= 8;
+            num |= (byteNum[ix] & 0xff);
+        }
+        return num;
+    }
 
 }

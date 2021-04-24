@@ -1,8 +1,11 @@
 package cn.nulladev.mcb;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import cn.nulladev.mcb.transaction.Transaction;
+import cn.nulladev.mcb.utils.CommonHelper;
+import cn.nulladev.mcb.utils.SHA256;
 import cn.nulladev.mcb.utils.TypeTrans;
 
 public class Block {
@@ -16,7 +19,7 @@ public class Block {
 	protected int _version = VERSION;	//4Bytes
 	protected String _prevHash;		//32Bytes
 	protected String _merkleRoot;		//32Bytes
-	protected long _timeStamp;		//4Bytes
+	protected long _timeStamp;		//4Bytes in BTC, but 8 Bytes there
 	protected String _target;			//4Bytes
 	protected int _nonce;				//4Bytes
 	
@@ -48,21 +51,26 @@ public class Block {
 			this._nonce++;
 		} else {
 			this._nonce = 0;
-			this.getCoinbaseTransaction();	//更改sign以改变merkle tree的root hash
+			this.getCoinbaseTransaction();	//TODO 更改sign以改变merkle tree的root hash
 			this._merkleRoot = calcMerkleRoot();
 		}
 		this._hash = calcHash();
-		return TypeTrans.hexCompare(this._hash, this._target);
+		return CommonHelper.hexCompare(this._hash, this._target);
 	}
 	
 	public String calcMerkleRoot() {
-		//TODO 根据list计算root
-		return "";
+		return TypeTrans.byte2Hex(CommonHelper.calcMerkle(_transaction_list.stream().map(t->TypeTrans.hex2Byte(t.getHash())).collect(Collectors.toList())));
 	}
 	
 	public String calcHash() {
-		//TODO 根据_version和_nonce重新计算hash
-		return "";
+		byte[] b1 = TypeTrans.int2Byte(_version);
+		byte[] b2 = TypeTrans.hex2Byte(_prevHash);
+		byte[] b3 = TypeTrans.hex2Byte(_merkleRoot);
+		byte[] b4 = TypeTrans.long2Byte(_timeStamp);
+		byte[] b5 = TypeTrans.hex2Byte(_target);
+		byte[] b6 = TypeTrans.int2Byte(_nonce);
+		byte[] b = CommonHelper.mergeByteArrays(b1, b2, b3, b4, b5, b6);
+		return TypeTrans.byte2Hex(SHA256.getSHA256(b));
 	}
 	
 	public Transaction getCoinbaseTransaction() {

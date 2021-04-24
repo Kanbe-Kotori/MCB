@@ -29,6 +29,10 @@ public class Transaction {
 		else return calcHash();
 	}
 	
+	public TxOutput getOutput(int index) {
+		return _output.get(index);
+	}
+	
 	protected String calcHash() {
 		byte[][] b1a = _input.stream().map(t->t.getRaw()).toArray(byte[][]::new);
 		byte[] b1 = CommonHelper.mergeByteArrays(b1a);
@@ -42,6 +46,17 @@ public class Transaction {
 		double input = _input.stream().mapToDouble(t->t.getOutput().getValue()).sum();
 		double output = _output.stream().mapToDouble(t->t.getValue()).sum();
 		return input - output;
+	}
+	
+	public byte[] getRaw() {
+		byte[] hash = TypeTrans.hex2Byte(getHash());
+		byte[] b1 = TypeTrans.int2Byte(_input.size());
+		byte[][] b2a = _input.stream().map(t->t.getRaw()).toArray(byte[][]::new);
+		byte[] b2 = CommonHelper.mergeByteArrays(b2a);
+		byte[] b3 = TypeTrans.int2Byte(_output.size());
+		byte[][] b4a = _output.stream().map(t->t.getRaw()).toArray(byte[][]::new);
+		byte[] b4 = CommonHelper.mergeByteArrays(b4a);
+		return CommonHelper.mergeByteArrays(hash, b1, b2, b3, b4);
 	}
 
 }
