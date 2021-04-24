@@ -1,5 +1,9 @@
 package cn.nulladev.mcb.transaction;
 
+import cn.nulladev.mcb.utils.CommonHelper;
+import cn.nulladev.mcb.utils.RSA;
+import cn.nulladev.mcb.utils.TypeTrans;
+
 public class TxInput {
 	
 	private String _tx_hash;
@@ -15,9 +19,20 @@ public class TxInput {
 		return input;
 	}
 	
-	public void generateSign(String priKey) {
-		//TODO ÓÃpriKey¼ÓÃÜ_tx_hash
-		this._sign = "";
+	public void genSign(String priKey) throws Exception {
+		this._sign = RSA.encrypt(_tx_hash, priKey);
+	}
+	
+	public TxOutput getOutput() {
+		//TODO ä»BlockchainæŸ¥è¯¢ï¼Œè·å–å¯¹åº”çš„output
+		return null;
+	}
+	
+	public byte[] getRaw() {
+		byte[] b1 = _tx_hash.getBytes();
+		byte[] b2 = TypeTrans.int2Byte(_num);
+		byte[] b3 = _sign.getBytes();
+		return CommonHelper.mergeByteArrays(b1, b2, b3);
 	}
 
 }

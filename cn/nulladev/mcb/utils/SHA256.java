@@ -14,5 +14,16 @@ public class SHA256 {
 		}
 		return null;
 	}
+	
+	public static byte[] getSHA256(byte[] str){
+		try {
+			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+			messageDigest.update(str);
+			return messageDigest.digest();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 }

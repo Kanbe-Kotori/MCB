@@ -2,6 +2,10 @@ package cn.nulladev.mcb.transaction;
 
 import java.util.ArrayList;
 
+import cn.nulladev.mcb.utils.CommonHelper;
+import cn.nulladev.mcb.utils.SHA256;
+import cn.nulladev.mcb.utils.TypeTrans;
+
 public class Transaction {
 	
 	protected String _hash;
@@ -11,7 +15,7 @@ public class Transaction {
 	
 	protected Transaction() {}
 	
-	public static Transaction create(ArrayList<TxInput> input, ArrayList<TxOutput> output, String sign) {
+	public static Transaction create(ArrayList<TxInput> input, ArrayList<TxOutput> output) {
 		Transaction t = new Transaction();
 		t._input = input;
 		t._output = output;
@@ -26,13 +30,17 @@ public class Transaction {
 	}
 	
 	protected String calcHash() {
-		//TODO
-		return "";
+		byte[][] b1a = _input.stream().map(t->t.getRaw()).toArray(byte[][]::new);
+		byte[] b1 = CommonHelper.mergeByteArrays(b1a);
+		byte[][] b2a = _output.stream().map(t->t.getRaw()).toArray(byte[][]::new);
+		byte[] b2 = CommonHelper.mergeByteArrays(b2a);
+		byte[] b = CommonHelper.mergeByteArray(b1, b2);
+		return TypeTrans.byte2Hex(SHA256.getSHA256(b));
 	}
 	
 	public double getFeeValue() {
-		double input = 0; 	//TODO 总和
-		double output = 0;	//TODO 总和
+		double input = _input.stream().mapToDouble(t->t.getOutput().getValue()).sum();
+		double output = _output.stream().mapToDouble(t->t.getValue()).sum();
 		return input - output;
 	}
 

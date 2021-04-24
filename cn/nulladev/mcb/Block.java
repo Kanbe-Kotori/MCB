@@ -48,7 +48,7 @@ public class Block {
 			this._nonce++;
 		} else {
 			this._nonce = 0;
-			this.getCoinbaseTransaction();	//更改sign以改变merkle tree的root hash
+			this.getCoinbaseTransaction();	//鏇存敼sign浠ユ敼鍙榤erkle tree鐨剅oot hash
 			this._merkleRoot = calcMerkleRoot();
 		}
 		this._hash = calcHash();
@@ -56,12 +56,12 @@ public class Block {
 	}
 	
 	public String calcMerkleRoot() {
-		//TODO 根据list获取root
+		//TODO 鏍规嵁list璁＄畻root
 		return "";
 	}
 	
 	public String calcHash() {
-		//TODO 根据_version到_nonce计算hash
+		//TODO 鏍规嵁_version鍜宊nonce閲嶆柊璁＄畻hash
 		return "";
 	}
 	

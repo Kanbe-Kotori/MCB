@@ -28,6 +28,41 @@ public class TypeTrans {
         return ret;
     }
 	
+	public static byte[] double2Byte(double d) {  
+		long value = Double.doubleToRawLongBits(d);  
+		byte[] byteRet = new byte[8];  
+		for (int i = 0; i < 8; i++) {  
+			byteRet[i] = (byte) ((value >> 8 * i) & 0xff);  
+		}  
+		return byteRet;  
+	}
+	
+	public static double byte2Double(byte[] arr) {  
+		long value = 0;  
+		for (int i = 0; i < 8; i++) {  
+			value |= ((long) (arr[i] & 0xff)) << (8 * i);  
+		}  
+		return Double.longBitsToDouble(value);  
+	}
+	
+	public static byte[] int2Byte(int i) {
+        byte[] result = new byte[4];
+        result[0] = (byte)((i >> 24) & 0xFF);
+        result[1] = (byte)((i >> 16) & 0xFF);
+        result[2] = (byte)((i >> 8) & 0xFF);
+        result[3] = (byte)(i & 0xFF);
+        return result;
+    }
+ 
+    public static int byte2Int(byte[] bytes) {
+        int value=0;
+        for(int i = 0; i < 4; i++) {
+            int shift= (3-i) * 8;
+            value +=(bytes[i] & 0xFF) << shift;
+        }
+        return value;
+    }
+	
 	public static boolean hexCompare(byte[] b1, byte[] b2) {
 		//TODO
 		return true;
