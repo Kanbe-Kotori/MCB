@@ -1,9 +1,27 @@
 package cn.nulladev.mcb;
 
+import java.security.KeyPair;
+
+import cn.nulladev.mcb.utils.*;
+
 public class Main {
 	
 	public static void main(String[] Args) {
-		System.out.println(MathHelper.getSHA256("woshisb"));
+		try {
+			//System.out.println(SHA256.getSHA256("woshisb"));	
+			KeyPair kp = RSA.createKeyPair();
+			String pubKey = RSA.getPubKey(kp);
+			System.out.println("pubKey is " + pubKey);
+			String priKey = RSA.getPriKey(kp);
+			System.out.println("priKey is " + priKey);
+			String encrypted = RSA.encrypt("woshisb", RSA.getPubKey(kp));
+			System.out.println("encrypted message is " + encrypted);
+			String decrypted = RSA.decrypt(encrypted, priKey);
+			System.out.println("decrypted message is " + decrypted);
+		} catch(Exception e) {
+			
+		}
+		
 	}
 
 }

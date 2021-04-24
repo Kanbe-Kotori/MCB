@@ -1,24 +1,7 @@
-package cn.nulladev.mcb;
+package cn.nulladev.mcb.utils;
 
-import java.security.MessageDigest;
-
-public class MathHelper {
-	
-	public static byte[] getSHA256(String str){
-		try {
-			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-			messageDigest.update(str.getBytes("UTF-8"));
-			return messageDigest.digest();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	public static String getSHA256Str(String str){
-		return byte2Hex(getSHA256(str));
-	}
-	
+public class TypeTrans {
+		
 	public static String byte2Hex(byte[] bytes){
 		StringBuffer stringBuffer = new StringBuffer();
 		String temp = null;
