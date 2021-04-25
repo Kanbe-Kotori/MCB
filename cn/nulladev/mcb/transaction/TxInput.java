@@ -1,5 +1,7 @@
 package cn.nulladev.mcb.transaction;
 
+import cn.nulladev.mcb.UTXOPool;
+import cn.nulladev.mcb.User;
 import cn.nulladev.mcb.utils.CommonHelper;
 import cn.nulladev.mcb.utils.RSA;
 import cn.nulladev.mcb.utils.TypeTrans;
@@ -19,13 +21,21 @@ public class TxInput {
 		return input;
 	}
 	
-	public void genSign(String priKey) throws Exception {
-		this._sign = RSA.encrypt(_tx_hash, priKey);
+	public String getHash() {
+		return this._tx_hash;
 	}
 	
-	public TxOutput getOutput() {
-		//TODO 从Blockchain查询，获取对应的output
-		return null;
+	public int getIndex() {
+		return this._num;
+	}
+	
+	public TxInput genSign(User user) throws Exception {
+		this._sign = user.sign(_tx_hash);
+		return this;
+	}
+	
+	public TxOutput getUTXO() {
+		return UTXOPool.UTXOList.stream().filter(t->t.matchInput(this)).findAny().orElse(null);
 	}
 	
 	public byte[] getRaw() {

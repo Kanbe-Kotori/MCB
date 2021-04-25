@@ -1,6 +1,8 @@
-package cn.nulladev.mcb.transaction;
+package cn.nulladev.mcb;
 
 import java.util.ArrayList;
+
+import cn.nulladev.mcb.transaction.TxOutput;
 
 public class UTXOPool {
 	

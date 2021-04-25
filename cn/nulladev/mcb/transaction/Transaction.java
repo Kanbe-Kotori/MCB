@@ -33,6 +33,10 @@ public class Transaction {
 		return _output.get(index);
 	}
 	
+	public int getOutputIndex(TxOutput output) {
+		return this._output.indexOf(output);
+	}
+	
 	protected String calcHash() {
 		byte[][] b1a = _input.stream().map(t->t.getRaw()).toArray(byte[][]::new);
 		byte[] b1 = CommonHelper.mergeByteArrays(b1a);
@@ -42,8 +46,9 @@ public class Transaction {
 		return TypeTrans.byte2Hex(SHA256.getSHA256(b));
 	}
 	
+	//Must be called before validation, or UTXOs won't be found.
 	public double getFeeValue() {
-		double input = _input.stream().mapToDouble(t->t.getOutput().getValue()).sum();
+		double input = _input.stream().mapToDouble(t->t.getUTXO().getValue()).sum();
 		double output = _output.stream().mapToDouble(t->t.getValue()).sum();
 		return input - output;
 	}

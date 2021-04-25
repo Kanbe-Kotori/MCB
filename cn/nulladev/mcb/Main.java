@@ -14,10 +14,6 @@ public class Main {
 			System.out.println("pubKey is " + pubKey);
 			String priKey = RSA.getPriKey(kp);
 			System.out.println("priKey is " + priKey);
-			String encrypted = RSA.encrypt("woshisb", RSA.getPubKey(kp));
-			System.out.println("encrypted message is " + encrypted);
-			String decrypted = RSA.decrypt(encrypted, priKey);
-			System.out.println("decrypted message is " + decrypted);
 		} catch(Exception e) {
 			
 		}
