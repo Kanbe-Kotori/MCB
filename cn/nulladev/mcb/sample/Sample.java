@@ -22,7 +22,7 @@ public class Sample {
 		System.out.println("user2 current balance:" + SampleUsers.sampleUser2.getBalance(testchain) + ", list:");
 		SampleUsers.sampleUser2.getUTXOList(testchain).forEach(t->System.out.println(t.getValue()));
 		if (balance >= 200) {
-			System.out.println("user1 try to give user2 199.");
+			System.out.println("user1 trys to give user2 199 because he owns more than 200.");
 			Transaction t = SampleUsers.sampleUser1.createTransaction(testchain, StaticValues.PUB_KEY_2, 199, 0.9);
 			list.add(t);
 		}
