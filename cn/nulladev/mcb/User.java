@@ -49,7 +49,7 @@ public class User {
 	}
 	
 	public double getBalance(BlockChain chain) {
-		return chain.pool.getListClone().stream().mapToDouble(t->t.getValue()).sum();
+		return getUTXOList(chain).stream().mapToDouble(t->t.getValue()).sum();
 	}
 	
 	public String sign(String data) throws Exception {
@@ -84,7 +84,7 @@ public class User {
 			output2.setTransaction(tx);
 			return tx;		
 		} catch(Exception e) {
-			
+			e.printStackTrace();
 		}		
 		return null;
 	}

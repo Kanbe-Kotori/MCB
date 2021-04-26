@@ -6,6 +6,7 @@ import java.util.List;
 import cn.nulladev.mcb.core.transaction.Transaction;
 import cn.nulladev.mcb.core.transaction.TxInput;
 import cn.nulladev.mcb.utils.CommonHelper;
+import cn.nulladev.mcb.utils.RSA;
 
 public class SingleChain extends BlockChain {
 	
@@ -32,7 +33,7 @@ public class SingleChain extends BlockChain {
 		
 		int size = b.getTransactionList().size();
 		if (size >= 2) {
-			List<Transaction> normal = b.getTransactionList().subList(1, size - 1);
+			List<Transaction> normal = b.getTransactionList().subList(1, size);
 			for (Transaction t : normal) {
 				for (TxInput i : t.getInputs()) {
 					this.pool.remove(i.getUTXO(this));
@@ -57,19 +58,27 @@ public class SingleChain extends BlockChain {
 		
 		int size = b.getTransactionList().size();
 		if (size >= 2) {
-			List<Transaction> normal = b.getTransactionList().subList(1, size - 1);
+			List<Transaction> normal = b.getTransactionList().subList(1, size);
 			double total_fee = 0;
 			for (Transaction t : normal) {
 				for (TxInput i : t.getInputs()) {
 					if (i.getUTXO(this) == null)
 						return false;
+					String sender = i.getUTXO(this).getOwner();
+					try {
+						if (!RSA.verify(i.getSign(), sender).equals(i.getHash()))
+							return false;
+					} catch(Exception e) {
+						e.printStackTrace();
+						return false;
+					}
 				}
 				double fee = t.getFeeValue(this);
 				if (fee <= 0)
 					return false;
 				total_fee += fee;
 			}
-			if (total_fee + 100 > coinbase.getTotalOutput())
+			if (total_fee + 100 < coinbase.getTotalOutput())
 				return false;
 		}			
 		this.addBlock(b);

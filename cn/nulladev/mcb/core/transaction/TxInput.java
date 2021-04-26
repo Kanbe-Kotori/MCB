@@ -28,6 +28,10 @@ public class TxInput {
 		return this._num;
 	}
 	
+	public String getSign() {
+		return this._sign;
+	}
+	
 	public TxInput genSign(User user) throws Exception {
 		this._sign = user.sign(_tx_hash);
 		return this;

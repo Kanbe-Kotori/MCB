@@ -33,7 +33,7 @@ public class Transaction {
 		t._input_list = new ArrayList<TxInput>();
 		t._input_list.add(TxInput.create(COINBASE_HASH, COINBASE_INDEX).genRandomSign());
 		t._output_list = new ArrayList<TxOutput>();
-		t._output_list.add(TxOutput.create(value, miner));
+		t._output_list.add(TxOutput.create(value, miner).setTransaction(t));
 		t._timeStamp = System.currentTimeMillis();
 		t._hash = t.calcHash();
 		return t;

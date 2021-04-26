@@ -24,8 +24,8 @@ public class CommonHelper {
 		if (s.size() % 2 == 1) {
 			s.add("".getBytes());
 		}
-		byte[] b1 = calcMerkle(s.subList(0, s.size()/2 - 1));
-		byte[] b2 = calcMerkle(s.subList(s.size()/2, s.size()-1));
+		byte[] b1 = calcMerkle(s.subList(0, s.size()/2));
+		byte[] b2 = calcMerkle(s.subList(s.size()/2, s.size()));
 		return SHA256.getSHA256(mergeByteArray(b1,b2));
 	}
 	

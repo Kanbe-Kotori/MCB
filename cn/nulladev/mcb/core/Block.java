@@ -101,6 +101,7 @@ public class Block {
 	
 	public void printInfo() {
 		System.out.println("index=" + this._index);
+		System.out.println("transaction number=" + this._transaction_list.size());
 		System.out.println("hash=" + this._hash);
 		System.out.println("version=" + this._version);
 		System.out.println("prevHash=" + this._prevHash);
