@@ -1,15 +1,16 @@
-package cn.nulladev.mcb;
+package cn.nulladev.mcb.core;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import cn.nulladev.mcb.transaction.Transaction;
+import cn.nulladev.mcb.core.transaction.Transaction;
 import cn.nulladev.mcb.utils.CommonHelper;
 import cn.nulladev.mcb.utils.SHA256;
 import cn.nulladev.mcb.utils.TypeTrans;
 
 public class Block {
 	
+	public static final String ZERO_HASH = "0000000000000000000000000000000000000000000000000000000000000000";
 	public static final int VERSION = 114514;
 	
 	protected int _index;
@@ -31,7 +32,7 @@ public class Block {
 	
 	protected Block() {}
 	
-	public Block create(int index, String prevHash, String target) {
+	public static Block create(int index, String prevHash, String target) {
 		Block b = new Block();
 		b._index = index;
 		b._prevHash = prevHash;
@@ -39,6 +40,20 @@ public class Block {
 		b._target = target;
 		b._nonce = 0;
 		return b;
+	}
+	
+	public int getNonce() {
+		return this._nonce;
+	}
+	
+	public String getTarget() {
+		return this._target;
+	}
+	
+	public String getHash() {
+		if (this._hash == null)
+			this._hash = this.calcHash();
+		return this._hash;
 	}
 	
 	public void initTransactionList(ArrayList<Transaction> list) {
@@ -51,7 +66,7 @@ public class Block {
 			this._nonce++;
 		} else {
 			this._nonce = 0;
-			this.getCoinbaseTransaction();	//TODO 更改sign以改变merkle tree的root hash
+			this.getCoinbaseTransaction().changeCoinbaseHash();
 			this._merkleRoot = calcMerkleRoot();
 		}
 		this._hash = calcHash();

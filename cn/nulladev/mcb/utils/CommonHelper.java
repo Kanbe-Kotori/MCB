@@ -20,7 +20,7 @@ public class CommonHelper {
 	}
 	
 	public static byte[] calcMerkle(List<byte[]> s) {
-		if (s.size() == 1) return SHA256.getSHA256(s.get(1));
+		if (s.size() == 1) return SHA256.getSHA256(s.get(0));
 		if (s.size() % 2 == 1) {
 			s.add("".getBytes());
 		}
@@ -32,9 +32,11 @@ public class CommonHelper {
 	//return b1<=b2
 	public static boolean hexCompare(byte[] b1, byte[] b2) {
 		for (int i=0; i<b1.length; i++) {
-			if (b1[i] < b2[i])
+			int v1 = b1[i]>=0? b1[i] : b1[i]+256;
+			int v2 = b2[i]>=0? b2[i] : b2[i]+256;
+			if (v1 < v2)
 				return true;
-			else if (b1[i] > b2[i])
+			else if (v1 > v2)
 				return false;
 			else
 				continue;

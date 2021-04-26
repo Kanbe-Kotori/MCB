@@ -1,4 +1,4 @@
-package cn.nulladev.mcb.transaction;
+package cn.nulladev.mcb.core.transaction;
 
 import java.util.ArrayList;
 
@@ -8,9 +8,12 @@ import cn.nulladev.mcb.utils.TypeTrans;
 
 public class Transaction {
 	
+	public static String COINBASE_HASH = "0000000000000000000000000000000000000000000000000000000000000000";
+	public static int COINBASE_INDEX = Integer.MAX_VALUE;
+	
 	protected String _hash;
-	protected ArrayList<TxInput> _input = new ArrayList<TxInput>();
-	protected ArrayList<TxOutput> _output = new ArrayList<TxOutput>();
+	protected ArrayList<TxInput> _input;
+	protected ArrayList<TxOutput> _output;
 	protected long _timeStamp;
 	
 	protected Transaction() {}
@@ -24,9 +27,42 @@ public class Transaction {
 		return t;
 	}
 	
+	public static Transaction createCoinBase(String miner, double value) {
+		Transaction t = new Transaction();
+		t._input = new ArrayList<TxInput>();
+		t._input.add(TxInput.create(COINBASE_HASH, COINBASE_INDEX).genRandomSign());
+		t._output = new ArrayList<TxOutput>();
+		t._output.add(TxOutput.create(value, miner));
+		t._timeStamp = System.currentTimeMillis();
+		t._hash = t.calcHash();
+		return t;
+	}
+	
+	public boolean isCoinBase() {
+		if (this._input.size() != 1)
+			return false;
+		TxInput coinbase = this._input.get(0);
+		if (!coinbase.getHash().equals(COINBASE_HASH))
+			return false;
+		if (coinbase.getIndex() != COINBASE_INDEX)
+			return false;
+		return true;
+	}
+	
+	public void changeCoinbaseHash() {
+		if (this.isCoinBase())
+			this._input.get(0).genRandomSign();
+		this._hash = this.calcHash();
+	}
+	
 	public String getHash() {
-		if (_hash != null) return _hash;
-		else return calcHash();
+		if (this._hash == null)
+			this._hash = this.calcHash();
+		return this._hash;
+	}
+	
+	public TxInput getInput(int index) {
+		return _input.get(index);
 	}
 	
 	public TxOutput getOutput(int index) {

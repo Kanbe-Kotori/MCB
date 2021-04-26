@@ -51,5 +51,24 @@ public class RSA {
 		String outStr = new String(cipher.doFinal(inputByte));
 		return outStr;
 	}
+	
+	public static String sign(String str, String privateKey) throws Exception {
+		byte[] decoded = Base64.getDecoder().decode(privateKey);
+        RSAPrivateKey priKey = (RSAPrivateKey) KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(decoded));  
+		Cipher cipher = Cipher.getInstance("RSA");
+		cipher.init(Cipher.ENCRYPT_MODE, priKey);
+		String outStr = Base64.getEncoder().encodeToString(cipher.doFinal(str.getBytes("UTF-8")));
+		return outStr;
+	}
+
+	public static String verify(String str, String publicKey) throws Exception {
+		byte[] inputByte = Base64.getDecoder().decode(str.getBytes("UTF-8"));
+		byte[] decoded = Base64.getDecoder().decode(publicKey);  
+		RSAPublicKey pubKey = (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(decoded));
+		Cipher cipher = Cipher.getInstance("RSA");
+		cipher.init(Cipher.DECRYPT_MODE, pubKey);
+		String outStr = new String(cipher.doFinal(inputByte));
+		return outStr;
+	}
 
 }

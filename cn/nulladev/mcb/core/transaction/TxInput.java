@@ -1,9 +1,8 @@
-package cn.nulladev.mcb.transaction;
+package cn.nulladev.mcb.core.transaction;
 
-import cn.nulladev.mcb.UTXOPool;
 import cn.nulladev.mcb.User;
+import cn.nulladev.mcb.core.UTXOPool;
 import cn.nulladev.mcb.utils.CommonHelper;
-import cn.nulladev.mcb.utils.RSA;
 import cn.nulladev.mcb.utils.TypeTrans;
 
 public class TxInput {
@@ -31,6 +30,11 @@ public class TxInput {
 	
 	public TxInput genSign(User user) throws Exception {
 		this._sign = user.sign(_tx_hash);
+		return this;
+	}
+	
+	public TxInput genRandomSign() {
+		this._sign = "";
 		return this;
 	}
 	

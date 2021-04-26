@@ -6,9 +6,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cn.nulladev.mcb.transaction.Transaction;
-import cn.nulladev.mcb.transaction.TxInput;
-import cn.nulladev.mcb.transaction.TxOutput;
+import cn.nulladev.mcb.core.UTXOPool;
+import cn.nulladev.mcb.core.transaction.Transaction;
+import cn.nulladev.mcb.core.transaction.TxInput;
+import cn.nulladev.mcb.core.transaction.TxOutput;
 import cn.nulladev.mcb.utils.RSA;
 
 public class User {
@@ -39,6 +40,10 @@ public class User {
 		return user;
 	}
 	
+	public String getAddress() {
+		return this._pub_key;
+	}
+	
 	public List<TxOutput> getUTXOList() {
 		return UTXOPool.UTXOList.stream().filter(t->t.getOwner().equals(this._pub_key)).collect(Collectors.toList());
 	}
@@ -48,7 +53,7 @@ public class User {
 	}
 	
 	public String sign(String data) throws Exception {
-		return RSA.encrypt(data, this._pri_key);
+		return RSA.sign(data, this._pri_key);
 	}
 	
 	public Transaction createTransaction(String address, double value, double fee) {
@@ -77,8 +82,7 @@ public class User {
 			Transaction tx = Transaction.create(inputList, outputList);
 			output1.setTransaction(tx);
 			output2.setTransaction(tx);
-			return tx;
-			
+			return tx;		
 		} catch(Exception e) {
 			
 		}		
