@@ -49,7 +49,7 @@ public class TxOutput {
 	}
 	
 	public boolean matchInput(TxInput input) {
-		return this._tx._hash.equals(input.getHash()) && this._tx.getOutput(input.getIndex()) == this;
+		return this._tx._hash.equals(input.getHash()) && this._tx.getOutputFromIndex(input.getIndex()) == this;
 	}
 
 }

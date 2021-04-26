@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cn.nulladev.mcb.core.UTXOPool;
+import cn.nulladev.mcb.core.BlockChain;
 import cn.nulladev.mcb.core.transaction.Transaction;
 import cn.nulladev.mcb.core.transaction.TxInput;
 import cn.nulladev.mcb.core.transaction.TxOutput;
@@ -44,21 +44,21 @@ public class User {
 		return this._pub_key;
 	}
 	
-	public List<TxOutput> getUTXOList() {
-		return UTXOPool.UTXOList.stream().filter(t->t.getOwner().equals(this._pub_key)).collect(Collectors.toList());
+	public List<TxOutput> getUTXOList(BlockChain chain) {
+		return chain.pool.getListClone().stream().filter(t->t.getOwner().equals(this._pub_key)).collect(Collectors.toList());
 	}
 	
-	public double getBalance() {
-		return getUTXOList().stream().mapToDouble(t->t.getValue()).sum();
+	public double getBalance(BlockChain chain) {
+		return chain.pool.getListClone().stream().mapToDouble(t->t.getValue()).sum();
 	}
 	
 	public String sign(String data) throws Exception {
 		return RSA.sign(data, this._pri_key);
 	}
 	
-	public Transaction createTransaction(String address, double value, double fee) {
+	public Transaction createTransaction(BlockChain chain, String address, double value, double fee) {
 		try {
-			List<TxOutput> list = this.getUTXOList();
+			List<TxOutput> list = this.getUTXOList(chain);
 			if (list.stream().mapToDouble(t->t.getValue()).sum() <= value + fee)
 				return null;
 			

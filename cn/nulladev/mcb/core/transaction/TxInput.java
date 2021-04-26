@@ -1,7 +1,7 @@
 package cn.nulladev.mcb.core.transaction;
 
 import cn.nulladev.mcb.User;
-import cn.nulladev.mcb.core.UTXOPool;
+import cn.nulladev.mcb.core.BlockChain;
 import cn.nulladev.mcb.utils.CommonHelper;
 import cn.nulladev.mcb.utils.TypeTrans;
 
@@ -38,8 +38,8 @@ public class TxInput {
 		return this;
 	}
 	
-	public TxOutput getUTXO() {
-		return UTXOPool.UTXOList.stream().filter(t->t.matchInput(this)).findAny().orElse(null);
+	public TxOutput getUTXO(BlockChain chain) {
+		return chain.pool.getListClone().stream().filter(t->t.matchInput(this)).findAny().orElse(null);
 	}
 	
 	public byte[] getRaw() {

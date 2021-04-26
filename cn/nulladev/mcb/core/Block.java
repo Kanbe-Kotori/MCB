@@ -56,6 +56,10 @@ public class Block {
 		return this._hash;
 	}
 	
+	public ArrayList<Transaction> getTransactionList() {
+		return this._transaction_list;
+	}
+	
 	public void initTransactionList(ArrayList<Transaction> list) {
 		this._transaction_list = list;
 		this._merkleRoot = calcMerkleRoot();
@@ -66,7 +70,7 @@ public class Block {
 			this._nonce++;
 		} else {
 			this._nonce = 0;
-			this.getCoinbaseTransaction().changeCoinbaseHash();
+			this.getFirstTransaction().changeCoinbaseHash();
 			this._merkleRoot = calcMerkleRoot();
 		}
 		this._hash = calcHash();
@@ -88,11 +92,22 @@ public class Block {
 		return TypeTrans.byte2Hex(SHA256.getSHA256(b));
 	}
 	
-	public Transaction getCoinbaseTransaction() {
+	//For a normal block, returns the Coinbase transaction.
+	public Transaction getFirstTransaction() {
 		if (this._transaction_list != null && this._transaction_list.size() > 0)
 			return this._transaction_list.get(0);
 		return null;
 	}
 	
+	public void printInfo() {
+		System.out.println("index=" + this._index);
+		System.out.println("hash=" + this._hash);
+		System.out.println("version=" + this._version);
+		System.out.println("prevHash=" + this._prevHash);
+		System.out.println("merkleRoot=" + this._merkleRoot);
+		System.out.println("timeStamp=" + this._timeStamp);
+		System.out.println("target=" + this._target);
+		System.out.println("nonce=" + this._nonce);
+	}
 
 }
