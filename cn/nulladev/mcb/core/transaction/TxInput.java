@@ -2,6 +2,7 @@ package cn.nulladev.mcb.core.transaction;
 
 import cn.nulladev.mcb.core.BlockChain;
 import cn.nulladev.mcb.core.User;
+import cn.nulladev.mcb.sample.SampleUsers;
 import cn.nulladev.mcb.utils.CommonHelper;
 import cn.nulladev.mcb.utils.TypeTrans;
 
@@ -37,8 +38,8 @@ public class TxInput {
 		return this;
 	}
 	
-	public TxInput genRandomSign() {
-		this._sign = "";
+	public TxInput genRandomSign() throws Exception {
+		this._sign = SampleUsers.sampleUser2.sign(CommonHelper.getRandomString(32));
 		return this;
 	}
 	

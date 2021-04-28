@@ -29,14 +29,19 @@ public class Transaction {
 	}
 	
 	public static Transaction createCoinBase(String miner, double value) {
-		Transaction t = new Transaction();
-		t._input_list = new ArrayList<TxInput>();
-		t._input_list.add(TxInput.create(COINBASE_HASH, COINBASE_INDEX).genRandomSign());
-		t._output_list = new ArrayList<TxOutput>();
-		t._output_list.add(TxOutput.create(value, miner).setTransaction(t));
-		t._timeStamp = System.currentTimeMillis();
-		t._hash = t.calcHash();
-		return t;
+		try {
+			Transaction t = new Transaction();
+			t._input_list = new ArrayList<TxInput>();
+			t._input_list.add(TxInput.create(COINBASE_HASH, COINBASE_INDEX).genRandomSign());
+			t._output_list = new ArrayList<TxOutput>();
+			t._output_list.add(TxOutput.create(value, miner).setTransaction(t));
+			t._timeStamp = System.currentTimeMillis();
+			t._hash = t.calcHash();
+			return t;
+		} catch(Exception e) {
+			
+		}
+		return null;
 	}
 	
 	public boolean isCoinBase() {
@@ -51,9 +56,13 @@ public class Transaction {
 	}
 	
 	public void changeCoinbaseHash() {
-		if (this.isCoinBase())
-			this._input_list.get(0).genRandomSign();
-		this._hash = this.calcHash();
+		try {
+			if (this.isCoinBase())
+				this._input_list.get(0).genRandomSign();
+			this._hash = this.calcHash();
+		} catch(Exception e) {
+			
+		}
 	}
 	
 	public String getHash() {

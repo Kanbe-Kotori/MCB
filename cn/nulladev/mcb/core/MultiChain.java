@@ -1,12 +1,13 @@
 package cn.nulladev.mcb.core;
 
 import java.util.ArrayList;
-import java.util.Random;
+
+import cn.nulladev.mcb.utils.SHA256;
+import cn.nulladev.mcb.utils.TypeTrans;
 
 public class MultiChain extends BlockChain {
 	
 	protected final ArrayList<Block>[] _chains;
-	protected final Random random = new Random(12345678);
 	
 	public MultiChain(int num) {
 		super();
@@ -31,8 +32,8 @@ public class MultiChain extends BlockChain {
 	}
 	
 	protected boolean hasEmptyChain() {
-		for (int i = 0; i<getChainNum(); i++) {
-			if (this._chains[i].size() == 0)
+		for (ArrayList<Block> chain : _chains) {
+			if (chain.size() == 0)
 				return true;
 		}
 		return false;
@@ -42,8 +43,11 @@ public class MultiChain extends BlockChain {
 	public String getLastBlockHash() {
 		if (this.hasEmptyChain())
 			return null;
-		int n = random.nextInt(_chains.length);
-		return _chains[n].get(_chains[n].size()-1).getHash();
+		String s = "";
+		for (ArrayList<Block> chain : _chains) {
+			s += chain.get(chain.size()-1).getHash();
+		}
+		return TypeTrans.byte2Hex(SHA256.getSHA256(s));
 	}
 
 	@Override
@@ -52,14 +56,13 @@ public class MultiChain extends BlockChain {
 			if (!this.hasEmptyChain())
 				return false;
 		} else {
-			boolean flag = true;
+			if (this.hasEmptyChain())
+				return false;
+			String s = "";
 			for (ArrayList<Block> chain : _chains) {
-				if(chain.size() != 0 && chain.get(chain.size()-1).getHash().equals(b.getPrevHash())) {
-					flag = false;
-					break;
-				}
+				s += chain.get(chain.size()-1).getHash();
 			}
-			if (flag)
+			if (!TypeTrans.byte2Hex(SHA256.getSHA256(s)).equals(b.getPrevHash()))
 				return false;
 		}
 		return super.verifyNewBlock(b);
@@ -77,20 +80,17 @@ public class MultiChain extends BlockChain {
 				}
 			}
 		} else {
-			for (ArrayList<Block> chain : _chains) {
-				if(chain.size() != 0 && chain.get(chain.size()-1).getHash().equals(b.getPrevHash())) {
-					b.start_num = chain.get(chain.size()-1).end_num;
-					b.end_num = getLastIndex() + 1;
-					chain.add(b);
-				}
-			}
+			int n = b.getNonce()%getChainNum();
+			b.start_num = _chains[n].get(_chains[n].size()-1).end_num;
+			b.end_num = getLastIndex() + 1;
+			_chains[n].add(b);
 		}
 	}
 	
 	public void printChainStruct() {
 		int i = 0;
 		for (ArrayList<Block> chain : _chains) {
-			System.out.printf("Chain %d:\n", i);
+			System.out.printf("Chain %d:\n", i++);
 			for (Block b: chain) {
 				System.out.printf("(%d, %d)->", b.start_num, b.end_num);
 			}

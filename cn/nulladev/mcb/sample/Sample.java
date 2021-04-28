@@ -18,11 +18,11 @@ public class Sample {
 			//initialize transactions
 			ArrayList<Transaction> list = new ArrayList<Transaction>();
 			double balance = SampleUsers.sampleUser1.getBalance(testchain);
-			System.out.print("user1 current balance:" + balance + ", list: ");
-			SampleUsers.sampleUser1.getUTXOList(testchain).forEach(t->System.out.print(t.getValue() + ", "));
+			System.out.print("user1 current balance:" + String.format("%.1f", balance) + ", list: ");
+			SampleUsers.sampleUser1.getUTXOList(testchain).forEach(t->System.out.print(String.format("%.1f", t.getValue()) + ", "));
 			System.out.println();
-			System.out.print("user2 current balance:" + SampleUsers.sampleUser2.getBalance(testchain) + ", list: ");
-			SampleUsers.sampleUser2.getUTXOList(testchain).forEach(t->System.out.print(t.getValue() + ", "));
+			System.out.print("user2 current balance:" + String.format("%.1f",SampleUsers.sampleUser2.getBalance(testchain)) + ", list: ");
+			SampleUsers.sampleUser2.getUTXOList(testchain).forEach(t->System.out.print(String.format("%.1f", t.getValue()) + ", "));
 			System.out.println();
 			
 			if (balance >= 200) {

@@ -2,8 +2,11 @@ package cn.nulladev.mcb.utils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class CommonHelper {
+	
+	public static Random random = new Random();
 	
 	public static byte[] mergeByteArray(byte[] b1, byte[] b2) {
 		byte[] b = new byte[b1.length + b2.length];
@@ -51,6 +54,16 @@ public class CommonHelper {
 	
 	public static String genTarStr(int zero_num) {
 		return String.join("", Collections.nCopies(zero_num, "0")) + String.join("", Collections.nCopies(64 - zero_num, "f"));
+	}
+	
+	public static String getRandomString(int length){
+		String str="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		StringBuffer sb=new StringBuffer();
+		for(int i=0;i<length;i++){
+			int number=random.nextInt(62);
+			sb.append(str.charAt(number));
+		}
+		return sb.toString();
 	}
 
 }
