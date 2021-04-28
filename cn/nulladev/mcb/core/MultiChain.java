@@ -20,6 +20,16 @@ public class MultiChain extends BlockChain {
 		return this._chains.length;
 	}
 	
+	protected int getLastIndex() {
+		int index = 0;
+		for (ArrayList<Block> chain : _chains) {
+			if(chain.size() != 0) {
+				index = Math.max(index, chain.get(chain.size()-1).end_num);
+			}
+		}
+		return index;
+	}
+	
 	protected boolean hasEmptyChain() {
 		for (int i = 0; i<getChainNum(); i++) {
 			if (this._chains[i].size() == 0)
@@ -57,10 +67,34 @@ public class MultiChain extends BlockChain {
 
 	@Override
 	protected void addBlock(Block b) {
-		for (ArrayList<Block> chain : _chains) {
-			if(chain.size() != 0 && chain.get(chain.size()-1).getHash().equals(b.getPrevHash())) {
-				chain.add(b);
+		if (b.getPrevHash().equals(Block.ZERO_HASH)) {
+			for (int i = 0; i<getChainNum(); i++) {
+				if (this._chains[i].size() == 0) {
+					b.start_num = 0;
+					b.end_num = 1;
+					this._chains[i].add(b);
+					return;
+				}
 			}
+		} else {
+			for (ArrayList<Block> chain : _chains) {
+				if(chain.size() != 0 && chain.get(chain.size()-1).getHash().equals(b.getPrevHash())) {
+					b.start_num = chain.get(chain.size()-1).end_num;
+					b.end_num = getLastIndex() + 1;
+					chain.add(b);
+				}
+			}
+		}
+	}
+	
+	public void printChainStruct() {
+		int i = 0;
+		for (ArrayList<Block> chain : _chains) {
+			System.out.printf("Chain %d:\n", i);
+			for (Block b: chain) {
+				System.out.printf("(%d, %d)->", b.start_num, b.end_num);
+			}
+			System.out.println();
 		}
 	}
 

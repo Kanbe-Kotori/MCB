@@ -3,16 +3,16 @@ package cn.nulladev.mcb.sample;
 import java.util.ArrayList;
 
 import cn.nulladev.mcb.core.Block;
-import cn.nulladev.mcb.core.SingleChain;
+import cn.nulladev.mcb.core.MultiChain;
 import cn.nulladev.mcb.core.transaction.Transaction;
 import cn.nulladev.mcb.utils.CommonHelper;
 
-public class Sample {
+public class Sample2 {
 	
 	public static void main(String[] Args) {
-		SingleChain testchain = new SingleChain();
+		MultiChain testchain = new MultiChain(3);
 		
-		for(int i = 0; i<10; i++) {
+		for(int i = 0; i<20; i++) {
 			System.out.println("prepare to mine index: " + i);
 			
 			//initialize transactions
@@ -25,9 +25,9 @@ public class Sample {
 			SampleUsers.sampleUser2.getUTXOList(testchain).forEach(t->System.out.print(t.getValue() + ", "));
 			System.out.println();
 			
-			if (balance >= 200) {
-				System.out.println("user1 trys to give user2 199 because he owns more than 200.");
-				Transaction t = SampleUsers.sampleUser1.createTransaction(testchain, StaticValues.PUB_KEY_2, 199, 0.9);
+			if (balance >= 400) {
+				System.out.println("user1 trys to give user2 399 because he owns more than 400.");
+				Transaction t = SampleUsers.sampleUser1.createTransaction(testchain, StaticValues.PUB_KEY_2, 399, 0.9);
 				double mineValue = Block.MINER_BONUS + t.getFeeValue(testchain);
 				list.add(Transaction.createCoinBase(StaticValues.PUB_KEY_1, mineValue));
 				list.add(t);
@@ -55,6 +55,7 @@ public class Sample {
 			}
 			System.out.println("-------------------------");
 		}
+		testchain.printChainStruct();
 	}
 
 }
