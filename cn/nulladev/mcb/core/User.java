@@ -1,4 +1,4 @@
-package cn.nulladev.mcb;
+package cn.nulladev.mcb.core;
 
 import java.security.KeyPair;
 import java.util.ArrayList;
@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cn.nulladev.mcb.core.BlockChain;
 import cn.nulladev.mcb.core.transaction.Transaction;
 import cn.nulladev.mcb.core.transaction.TxInput;
 import cn.nulladev.mcb.core.transaction.TxOutput;

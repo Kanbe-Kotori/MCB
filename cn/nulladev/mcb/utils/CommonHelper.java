@@ -1,5 +1,6 @@
 package cn.nulladev.mcb.utils;
 
+import java.util.Collections;
 import java.util.List;
 
 public class CommonHelper {
@@ -46,6 +47,10 @@ public class CommonHelper {
 	
 	public static boolean hexCompare(String s1, String s2) {
 		return hexCompare(TypeTrans.hex2Byte(s1), TypeTrans.hex2Byte(s2));
+	}
+	
+	public static String genTarStr(int zero_num) {
+		return String.join("", Collections.nCopies(zero_num, "0")) + String.join("", Collections.nCopies(64 - zero_num, "f"));
 	}
 
 }

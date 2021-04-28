@@ -12,6 +12,7 @@ public class Block {
 	
 	public static final String ZERO_HASH = "0000000000000000000000000000000000000000000000000000000000000000";
 	public static final int VERSION = 114514;
+	public static final double MINER_BONUS = 100D;
 	
 	protected int _index;
 	protected String _hash;
@@ -24,7 +25,7 @@ public class Block {
 	protected String _target;			//4Bytes
 	protected int _nonce;				//4Bytes
 	
-	//Multi-chain field
+	//For MultiChain only
 	public int start_num;
 	public int end_num;
 	
@@ -54,6 +55,10 @@ public class Block {
 		if (this._hash == null)
 			this._hash = this.calcHash();
 		return this._hash;
+	}
+	
+	public String getPrevHash() {
+		return this._prevHash;
 	}
 	
 	public ArrayList<Transaction> getTransactionList() {

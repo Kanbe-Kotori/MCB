@@ -1,7 +1,7 @@
 package cn.nulladev.mcb.core.transaction;
 
-import cn.nulladev.mcb.User;
 import cn.nulladev.mcb.core.BlockChain;
+import cn.nulladev.mcb.core.User;
 import cn.nulladev.mcb.utils.CommonHelper;
 import cn.nulladev.mcb.utils.TypeTrans;
 

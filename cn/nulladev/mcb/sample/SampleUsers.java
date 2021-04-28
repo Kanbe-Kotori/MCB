@@ -1,6 +1,6 @@
 package cn.nulladev.mcb.sample;
 
-import cn.nulladev.mcb.User;
+import cn.nulladev.mcb.core.User;
 
 public class SampleUsers {
 	
