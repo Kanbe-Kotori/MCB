@@ -61,6 +61,9 @@ public class SingleChain extends BlockChain {
 			List<Transaction> normal = b.getTransactionList().subList(1, size);
 			double total_fee = 0;
 			for (Transaction t : normal) {
+				if (!t.getHash().equals(t.calcHash()))
+					return false;
+				
 				for (TxInput i : t.getInputs()) {
 					if (i.getUTXO(this) == null)
 						return false;

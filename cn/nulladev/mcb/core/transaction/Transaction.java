@@ -82,7 +82,7 @@ public class Transaction {
 		return _output_list.stream().mapToDouble(t->t.getValue()).sum();
 	}
 	
-	protected String calcHash() {
+	public String calcHash() {
 		byte[][] b1a = _input_list.stream().map(t->t.getRaw()).toArray(byte[][]::new);
 		byte[] b1 = CommonHelper.mergeByteArrays(b1a);
 		byte[][] b2a = _output_list.stream().map(t->t.getRaw()).toArray(byte[][]::new);
