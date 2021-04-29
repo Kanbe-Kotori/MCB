@@ -2,6 +2,7 @@ package cn.nulladev.mcb.core;
 
 import java.util.ArrayList;
 
+import cn.nulladev.mcb.utils.CommonHelper;
 import cn.nulladev.mcb.utils.SHA256;
 import cn.nulladev.mcb.utils.TypeTrans;
 
@@ -12,7 +13,7 @@ public class MultiChain extends BlockChain {
 	public MultiChain(int num) {
 		super();
 		this._chains = new ArrayList[num];
-		for (int i = 0; i< num; i++) {
+		for (int i = 0; i<num; i++) {
 			this._chains[i] = new ArrayList<Block>();
 		}
 	}
@@ -43,11 +44,11 @@ public class MultiChain extends BlockChain {
 	public String getLastBlockHash() {
 		if (this.hasEmptyChain())
 			return null;
-		String s = "";
+		ArrayList<byte[]> s = new ArrayList<byte[]>();
 		for (ArrayList<Block> chain : _chains) {
-			s += chain.get(chain.size()-1).getHash();
+			s.add(TypeTrans.hex2Byte(chain.get(chain.size()-1).getHash()));
 		}
-		return TypeTrans.byte2Hex(SHA256.getSHA256(s));
+		return TypeTrans.byte2Hex(CommonHelper.calcMerkle(s));
 	}
 
 	@Override
@@ -58,11 +59,7 @@ public class MultiChain extends BlockChain {
 		} else {
 			if (this.hasEmptyChain())
 				return false;
-			String s = "";
-			for (ArrayList<Block> chain : _chains) {
-				s += chain.get(chain.size()-1).getHash();
-			}
-			if (!TypeTrans.byte2Hex(SHA256.getSHA256(s)).equals(b.getPrevHash()))
+			if (!getLastBlockHash().equals(b.getPrevHash()))
 				return false;
 		}
 		return super.verifyNewBlock(b);
@@ -71,16 +68,17 @@ public class MultiChain extends BlockChain {
 	@Override
 	protected void addBlock(Block b) {
 		if (b.getPrevHash().equals(Block.ZERO_HASH)) {
-			for (int i = 0; i<getChainNum(); i++) {
-				if (this._chains[i].size() == 0) {
+			for (ArrayList<Block> chain : _chains) {
+				if (chain.size() == 0) {
 					b.start_num = 0;
 					b.end_num = 1;
-					this._chains[i].add(b);
+					chain.add(b);
 					return;
 				}
 			}
 		} else {
-			int n = b.getNonce()%getChainNum();
+			byte[] hash = TypeTrans.hex2Byte(b.getHash());
+			int n = (256*(hash[hash.length-2]&0xFF) + (hash[hash.length-1]&0xFF))%getChainNum();
 			b.start_num = _chains[n].get(_chains[n].size()-1).end_num;
 			b.end_num = getLastIndex() + 1;
 			_chains[n].add(b);
