@@ -10,6 +10,8 @@ public class MultiChain extends BlockChain {
 	
 	protected final ArrayList<Block>[] _chains;
 	
+	protected final ArrayList<Block> _block_unconfirmed = new ArrayList<Block>();
+	
 	public MultiChain(int num) {
 		super();
 		this._chains = new ArrayList[num];
@@ -82,6 +84,15 @@ public class MultiChain extends BlockChain {
 			b.start_num = _chains[n].get(_chains[n].size()-1).end_num;
 			b.end_num = getLastIndex() + 1;
 			_chains[n].add(b);
+		}
+	}
+	
+	@Override
+	protected void updateUTXO(Block b) {
+		this._block_unconfirmed.add(b);
+		if (this._block_unconfirmed.size() > 5) {
+			Block b1 = this._block_unconfirmed.remove(0);
+			super.updateUTXO(b1);
 		}
 	}
 	
