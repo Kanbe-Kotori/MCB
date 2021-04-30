@@ -71,7 +71,7 @@ public class Block {
 	}
 	
 	public boolean mine() {
-		if (this._nonce < Integer.MAX_VALUE) {
+		if (this._nonce != -1) {
 			this._nonce++;
 		} else {
 			this._nonce = 0;

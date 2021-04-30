@@ -3,7 +3,6 @@ package cn.nulladev.mcb.core;
 import java.util.ArrayList;
 
 import cn.nulladev.mcb.utils.CommonHelper;
-import cn.nulladev.mcb.utils.SHA256;
 import cn.nulladev.mcb.utils.TypeTrans;
 
 public class MultiChain extends BlockChain {
