@@ -16,6 +16,8 @@ public class User {
 	protected String _pub_key;
 	protected String _pri_key;
 	
+	protected ArrayList<TxOutput> locally_used_utxo = new ArrayList<TxOutput>();
+	
 	private User() {}
 	
 	public static User fromKey(String pubKey, String priKey) {
@@ -44,7 +46,9 @@ public class User {
 	}
 	
 	public List<TxOutput> getUTXOList(BlockChain chain) {
-		return chain.pool.getListClone().stream().filter(t->t.getOwner().equals(this._pub_key)).collect(Collectors.toList());
+		List<TxOutput> list = chain.pool.getListClone().stream().filter(t->t.getOwner().equals(this._pub_key)).collect(Collectors.toList());
+		list.removeAll(locally_used_utxo);
+		return list;
 	}
 	
 	public double getBalance(BlockChain chain) {
@@ -67,6 +71,7 @@ public class User {
 				TxOutput output = list.get(i);
 				totalInput += output.getValue();
 				inputList.add(output.genTxInput().genSign(this));
+				locally_used_utxo.add(output);
 				if(totalInput >= value + fee)
 					break;
 			}
